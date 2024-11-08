@@ -8,7 +8,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 import { service } from '@ember/service';
-import { pathIsFromDirectory } from 'kv/utils/kv-breadcrumbs';
+import { keyIsPath } from 'core/utils/key-utils';
 import errorMessage from 'vault/utils/error-message';
 
 /**
@@ -98,7 +98,7 @@ export default class KvSecretCreate extends Component {
   @action
   onCancel() {
     const { path } = this.args.secret;
-    pathIsFromDirectory(path)
+    keyIsPath(path)
       ? this.router.transitionTo('vault.cluster.secrets.backend.kv.list-directory', path)
       : this.router.transitionTo('vault.cluster.secrets.backend.kv.list');
   }

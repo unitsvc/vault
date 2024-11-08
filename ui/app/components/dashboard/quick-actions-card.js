@@ -7,7 +7,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { pathIsDirectory } from 'kv/utils/kv-breadcrumbs';
+import { keyIsFolder } from 'core/utils/key-utils';
 /**
  * @module DashboardQuickActionsCard
  * DashboardQuickActionsCard component allows users to see a list of secrets engines filtered by
@@ -147,7 +147,7 @@ export default class DashboardQuickActionsCard extends Component {
     // link to different route
     if (this.selectedEngine.type === 'kv') {
       const path = this.paramValue.path || this.paramValue;
-      route = pathIsDirectory(path)
+      route = keyIsFolder(path)
         ? 'vault.cluster.secrets.backend.kv.list-directory'
         : 'vault.cluster.secrets.backend.kv.secret.index';
       param = path;

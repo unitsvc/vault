@@ -4,42 +4,9 @@
  */
 
 import { module, test } from 'qunit';
-import { breadcrumbsForSecret, pathIsDirectory, pathIsFromDirectory } from 'kv/utils/kv-breadcrumbs';
+import { breadcrumbsForSecret } from 'kv/utils/kv-breadcrumbs';
 
 module('Unit | Utility | kv-breadcrumbs', function () {
-  test('pathIsDirectory works', function (assert) {
-    assert.expect(5);
-    [
-      { path: 'some/path', expect: false },
-      { path: 'some/path/', expect: true },
-      { path: 'some', expect: false },
-      { path: 'some/', expect: true },
-      { path: '/some', expect: false },
-    ].forEach((scenario) => {
-      assert.strictEqual(
-        pathIsDirectory(scenario.path),
-        scenario.expect,
-        `correct for path ${scenario.path}`
-      );
-    });
-  });
-  test('pathIsFromDirectory works', function (assert) {
-    assert.expect(5);
-    [
-      { path: 'some/path', expect: true },
-      { path: 'some/path/', expect: true },
-      { path: 'some', expect: false },
-      { path: 'some/', expect: true },
-      { path: '/some', expect: true },
-    ].forEach((scenario) => {
-      assert.strictEqual(
-        pathIsFromDirectory(scenario.path),
-        scenario.expect,
-        `correct for path ${scenario.path}`
-      );
-    });
-  });
-
   test('breadcrumbsForSecret works', function (assert) {
     let results = breadcrumbsForSecret('kv-mount', 'beep/bop/boop');
     assert.deepEqual(

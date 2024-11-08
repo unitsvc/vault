@@ -8,9 +8,8 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/owner';
-import { ancestorKeysForKey } from 'core/utils/key-utils';
+import { ancestorKeysForKey, keyIsFolder } from 'core/utils/key-utils';
 import errorMessage from 'vault/utils/error-message';
-import { pathIsDirectory } from 'kv/utils/kv-breadcrumbs';
 
 /**
  * @module List
@@ -40,7 +39,7 @@ export default class KvListPageComponent extends Component {
   get buttonText() {
     // if secretPath is an empty string it could be because the user hit a permissions error.
     const path = this.secretPath || this.args.pathToSecret;
-    return pathIsDirectory(path) ? 'View list' : 'View secret';
+    return keyIsFolder(path) ? 'View list' : 'View secret';
   }
 
   // callback from HDS pagination to set the queryParams page
@@ -85,7 +84,7 @@ export default class KvListPageComponent extends Component {
   @action
   transitionToSecretDetail(evt) {
     evt.preventDefault();
-    pathIsDirectory(this.secretPath)
+    keyIsFolder(this.secretPath)
       ? this.router.transitionTo('vault.cluster.secrets.backend.kv.list-directory', this.secretPath)
       : this.router.transitionTo('vault.cluster.secrets.backend.kv.secret.index', this.secretPath);
   }

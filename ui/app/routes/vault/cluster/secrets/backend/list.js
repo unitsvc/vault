@@ -11,7 +11,7 @@ import { allEngines, isAddonEngine } from 'vault/helpers/mountable-secret-engine
 import { service } from '@ember/service';
 import { normalizePath } from 'vault/utils/path-encoding-helpers';
 import { assert } from '@ember/debug';
-import { pathIsDirectory } from 'kv/utils/kv-breadcrumbs';
+import { keyIsFolder } from 'core/utils/key-utils';
 
 const SUPPORTED_BACKENDS = supportedSecretBackends();
 
@@ -93,7 +93,7 @@ export default Route.extend({
       return this.router.replaceWith('vault.cluster.secrets.backend.list', secret + '/');
     }
     if (isAddonEngine(type, secretEngine.version)) {
-      if (engineRoute === 'kv.list' && pathIsDirectory(secret)) {
+      if (engineRoute === 'kv.list' && keyIsFolder(secret)) {
         return this.router.transitionTo('vault.cluster.secrets.backend.kv.list-directory', backend, secret);
       }
       return this.router.transitionTo(`vault.cluster.secrets.backend.${engineRoute}`, backend);

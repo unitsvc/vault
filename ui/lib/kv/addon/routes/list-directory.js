@@ -6,7 +6,8 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 import { hash } from 'rsvp';
-import { pathIsDirectory, breadcrumbsForSecret } from 'kv/utils/kv-breadcrumbs';
+import { breadcrumbsForSecret } from 'kv/utils/kv-breadcrumbs';
+import { keyIsFolder } from 'core/utils/key-utils';
 
 export default class KvSecretsListRoute extends Route {
   @service pagination;
@@ -48,7 +49,7 @@ export default class KvSecretsListRoute extends Route {
     // links and routing assumes pathToParam includes trailing slash
     // users may want to include a percent-encoded octet like %2f in their path. Example: 'foo%2fbar' or non-data octets like 'foo%bar'.
     // we are assuming the user intended to include these characters in their path and we should not decode them.
-    return pathIsDirectory(pathParam) ? pathParam : `${pathParam}/`;
+    return keyIsFolder(pathParam) ? pathParam : `${pathParam}/`;
   }
 
   model(params) {
@@ -69,7 +70,7 @@ export default class KvSecretsListRoute extends Route {
     super.setupController(controller, resolvedModel);
     // renders alert inline error for overview card
     resolvedModel.failedDirectoryQuery =
-      resolvedModel.secrets === 403 && pathIsDirectory(resolvedModel.pathToSecret);
+      resolvedModel.secrets === 403 && keyIsFolder(resolvedModel.pathToSecret);
 
     let breadcrumbsArray = [{ label: 'Secrets', route: 'secrets', linkExternal: true }];
     // if on top level don't link the engine breadcrumb label, but if within a directory, do link back to top level.

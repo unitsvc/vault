@@ -11,6 +11,7 @@ import {
   parentKeyForKey,
 } from 'vault/utils/key-utils';
 import { module, test } from 'qunit';
+import { keyIsPath } from 'core/utils/key-utils';
 
 module('Unit | Utility | key-utils', function () {
   test('keyIsFolder', function (assert) {
@@ -23,6 +24,7 @@ module('Unit | Utility | key-utils', function () {
     result = keyIsFolder('foo/bar');
     assert.false(result, 'not folder');
   });
+
   test('keyPartsForKey', function (assert) {
     let result = keyPartsForKey('');
     assert.strictEqual(result, null, 'falsy value returns null');
@@ -36,6 +38,7 @@ module('Unit | Utility | key-utils', function () {
     result = keyPartsForKey('foo/bar/');
     assert.deepEqual(result, ['foo', 'bar'], 'returns parts of key when ends in slash');
   });
+
   test('parentKeyForKey', function (assert) {
     let result = parentKeyForKey('my/very/nested/secret/path');
     assert.strictEqual(result, 'my/very/nested/secret/', 'returns parent path for key');
@@ -46,6 +49,7 @@ module('Unit | Utility | key-utils', function () {
     result = parentKeyForKey('my-secret');
     assert.strictEqual(result, '', 'returns empty string when no parents');
   });
+
   test('keyWithoutParentKey', function (assert) {
     let result = keyWithoutParentKey('my/very/nested/secret/path');
     assert.strictEqual(result, 'path', 'returns key without parent key');
@@ -56,6 +60,7 @@ module('Unit | Utility | key-utils', function () {
     result = keyWithoutParentKey('folder/');
     assert.strictEqual(result, 'folder/', 'returns path as-is when folder without parent');
   });
+
   test('ancestorKeysForKey', function (assert) {
     const expected = ['my/', 'my/very/', 'my/very/nested/', 'my/very/nested/secret/'];
     let result = ancestorKeysForKey('my/very/nested/secret/path');
@@ -63,5 +68,18 @@ module('Unit | Utility | key-utils', function () {
 
     result = ancestorKeysForKey('foobar');
     assert.deepEqual(result, [], 'returns empty array for root path');
+  });
+
+  test('keyIsPath', function (assert) {
+    assert.expect(5);
+    [
+      { path: 'some/path', expect: true },
+      { path: 'some/path/', expect: true },
+      { path: 'some', expect: false },
+      { path: 'some/', expect: true },
+      { path: '/some', expect: true },
+    ].forEach((scenario) => {
+      assert.strictEqual(keyIsPath(scenario.path), scenario.expect, `correct for path ${scenario.path}`);
+    });
   });
 });

@@ -43,3 +43,8 @@ export function ancestorKeysForKey(key: string) {
 
   return ancestors;
 }
+
+// This regex looks for a forward slash anywhere in the path. ex: foo/ === true, foo/bar === true;
+export const keyIsPath = (path: string) => {
+  return path ? !!path.match(/\//) : false;
+};
